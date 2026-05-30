@@ -1,0 +1,46 @@
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Local machine config (SDK path, etc.)
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# Kotlin
+.kotlin/
+
+# Native / NDK
+.externalNativeBuild/
+.cxx/
+
+# Captures (Android Studio screenshots)
+/captures/
+
+# Build outputs
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Signing — never commit these
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / AI local settings
+.vscode/
+.claude/
+*.swp
+*~
+
+# Logs
+*.log

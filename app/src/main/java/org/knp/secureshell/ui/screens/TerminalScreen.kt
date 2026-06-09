@@ -420,15 +420,31 @@ fun TerminalScreen(
                                 Text("No snippets", color = c.textMuted, style = MaterialTheme.typography.bodySmall)
                             }
                         } else {
-                            val byGroup = snippets.groupBy { it.groupId }
+                            val filteredSnippets = remember(snippets, connection) {
+                                val connId = connection?.id
+                                if (connId.isNullOrBlank()) snippets else {
+                                    snippets.filter { snip ->
+                                        val cIds = try {
+                                            val arr = org.json.JSONArray(snip.connectionIds)
+                                            val list = mutableListOf<String>()
+                                            for (i in 0 until arr.length()) list.add(arr.getString(i))
+                                            list
+                                        } catch (e: Exception) { emptyList<String>() }
+                                        cIds.isEmpty() || cIds.contains(connId)
+                                    }
+                                }
+                            }
+                            val byGroup = filteredSnippets.groupBy { it.groupId }
                             val collapsedSidebar = remember { mutableStateMapOf<String, Boolean>() }
 
-                            val sidebarItems = remember(snippets, snippetFolders) {
+                            val sidebarItems = remember(filteredSnippets, snippetFolders) {
                                 val result = mutableListOf<Any>()
                                 for (folder in snippetFolders) {
                                     val items = byGroup[folder.id] ?: emptyList()
-                                    result.add(folder to items.size)
-                                    result.addAll(items)
+                                    if (items.isNotEmpty()) {
+                                        result.add(folder to items.size)
+                                        result.addAll(items)
+                                    }
                                 }
                                 val ungrouped = byGroup[null] ?: emptyList()
                                 if (ungrouped.isNotEmpty() && snippetFolders.isNotEmpty()) {

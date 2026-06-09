@@ -457,7 +457,9 @@ private fun SnippetEditDialog(
                         name = name.ifBlank { commandField.text.take(30) },
                         command = commandField.text,
                         tags = tags,
+                        connectionIds = initial?.connectionIds ?: "[]",
                         groupId = selectedGroupId,
+                        sortOrder = initial?.sortOrder ?: 0,
                     ))
                 },
                 enabled = commandField.text.isNotBlank(),

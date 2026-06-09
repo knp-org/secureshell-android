@@ -27,10 +27,10 @@ interface ConnectionDao {
 
 @Dao
 interface SnippetDao {
-    @Query("SELECT * FROM snippets WHERE deleted_at IS NULL ORDER BY name ASC")
+    @Query("SELECT * FROM snippets WHERE deleted_at IS NULL ORDER BY sort_order ASC, name ASC")
     fun getAll(): Flow<List<SnippetEntity>>
 
-    @Query("SELECT * FROM snippets WHERE deleted_at IS NULL ORDER BY name ASC")
+    @Query("SELECT * FROM snippets WHERE deleted_at IS NULL ORDER BY sort_order ASC, name ASC")
     suspend fun getAllOnce(): List<SnippetEntity>
 
     @Query("SELECT * FROM snippets WHERE id = :id")

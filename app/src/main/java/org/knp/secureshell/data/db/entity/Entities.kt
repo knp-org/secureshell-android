@@ -26,7 +26,9 @@ data class SnippetEntity(
     val name: String,
     val command: String,
     val tags: String = "",           // comma-separated
+    @ColumnInfo(name = "connection_ids") val connectionIds: String = "[]",
     @ColumnInfo(name = "group_id") val groupId: String? = null,
+    @ColumnInfo(name = "sort_order") val sortOrder: Int = 0,
     @ColumnInfo(name = "updated_at") val updatedAt: String = "",
     @ColumnInfo(name = "deleted_at") val deletedAt: String? = null,
 )

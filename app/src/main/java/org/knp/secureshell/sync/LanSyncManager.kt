@@ -458,8 +458,9 @@ class LanSyncManager(private val repo: AppRepository, private val context: andro
             put("command", snippet.command)
             put("description", JSONObject.NULL)
             put("tags", snippet.tags.ifBlank { "[]" })
-            put("connection_ids", "[]")
+            put("connection_ids", snippet.connectionIds.ifBlank { "[]" })
             put("group_id", snippet.groupId ?: JSONObject.NULL)
+            put("sort_order", snippet.sortOrder)
             put("created_at", snippet.updatedAt)
             put("updated_at", snippet.updatedAt)
             snippet.deletedAt?.let { put("deleted_at", it) }
@@ -539,7 +540,9 @@ class LanSyncManager(private val repo: AppRepository, private val context: andro
             name = name,
             command = obj.stringOr("command", ""),
             tags = tags,
+            connectionIds = obj.stringOr("connection_ids", "[]"),
             groupId = obj.nullableString("group_id"),
+            sortOrder = obj.optInt("sort_order", 0),
             updatedAt = obj.stringOr("updated_at", obj.stringOr("created_at", "")),
             deletedAt = obj.nullableString("deleted_at"),
         )

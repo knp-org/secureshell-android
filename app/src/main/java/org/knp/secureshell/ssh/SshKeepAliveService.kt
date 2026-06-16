@@ -53,7 +53,23 @@ class SshKeepAliveService : Service() {
         } else {
             startForeground(NOTIF_ID, notification)
         }
-        return START_STICKY
+        // NOT_STICKY: the service is explicitly started when a session opens, so
+        // there is nothing meaningful to recreate after a kill. START_STICKY
+        // would resurrect a sessionless zombie process that can later ANR.
+        return START_NOT_STICKY
+    }
+
+    /**
+     * The user swiped the app away from recents. Tear down live SSH sessions
+     * (which also stops this service) so we don't leave a zombie foreground
+     * process alive. Without this, the process lingers and eventually surfaces
+     * a "Not Responding" dialog even though the app appears closed.
+     */
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        (application as? org.knp.secureshell.SecureShellApp)?.sshManager?.disconnectAll()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+        super.onTaskRemoved(rootIntent)
     }
 
     private fun ensureChannel() {
